@@ -11,23 +11,30 @@ const PostList = () => {
     const fetchPosts = async () => {
       const page = id ? parseInt(id) : 1;
       const startIndex = (page - 1) * 8 + 1;
-      const url = `https://www.googleapis.com/blogger/v3/blogs/4491005031879174222/posts?key=AIzaSyAc_bDpxwf2RKBQy2kSjeX7k8EH2LGVn3U&maxResults=2&start-index=${startIndex}`;
+      const url = `https://www.blogger.com/feeds/4491005031879174222/posts/default?alt=json&max-results=8&start-index=${startIndex}`;
+
       const response = await fetch(url);
       const data = await response.json();
 
-      if (data.items) {
-        const processedPosts = data.items.map((post) => ({
-          slug: post.title.split("|")[0].trim(),
-          title: post.title.split("|")[1].trim(),
-          updated: post.updated.split("T")[0],
-          content: post.content,
-          categories: post.labels || [],
-          imgThumb: post.content.match(/src="([^"]+)"/)?.[1] || "",
+      if (data.feed && data.feed.entry) {
+        const processedPosts = data.feed.entry.map((post) => ({
+          slug: post.title.$t.split("|")[0].trim(),
+          title: post.title.$t.split("|")[1].trim(),
+          updated: post.updated.$t.split("T")[0],
+          content: post.content.$t.replace(/<\/?[^>]+(>|$)/g, "").slice(0, 80),
+          // categories: post.category ? post.category.map((category) => category.term) : [],
+          categories: post.category
+            ? post.category.map((category) => category.term).slice(0, 2)
+            : [],
+          imgThumb:
+            post.content.$t.match(/src="([^"]+)"/)?.[1] ||
+            post.content.$t.match(/href="([^"]+)"/)?.[1] ||
+            "",
         }));
-
         setPosts(processedPosts);
-        const hasNextPage = !!data.nextPageToken;
-        setTotalPages(hasNextPage ? currentPage + 1 : currentPage);
+        const totalEntries = data.feed.openSearch$totalResults.$t;
+        setTotalPages(Math.ceil(totalEntries / 8));
+        setCurrentPage(page);
       }
     };
 

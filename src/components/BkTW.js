@@ -1,11 +1,7 @@
 const BkTW = () => {
-  back2Top = () => {
-    window.scrollTo({ top: 0 });
-  };
-
   return (
     <>
-      <div className="toTopB vsbl nBtm" id="backTop" onClick={back2Top}>
+      <div className="toTopB vsbl nBtm" id="backTop" onClick={() => window.scrollTo({ top: 0 })}>
         <svg viewBox="0 0 34 34">
           <circle className="b" cx="17" cy="17" r="15.92"></circle>
           <circle

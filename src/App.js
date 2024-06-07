@@ -7,10 +7,11 @@ import PostDetail from "./components/PostDetail";
 import Menu from "./components/Menu";
 import Tag from "./components/Tag";
 import BkTW from "./components/BkTW";
+import NotFound from './pages/NotFound'
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename='/'>
       <input className="prfI hidden" id="offPrf" type="checkbox" />
       <input className="navI hidden" id="offNav" type="checkbox" />
       <input className="navM hidden" id="onMode" type="checkbox" />
@@ -43,6 +44,7 @@ const App = () => {
                         <Route path="/" element={<PostList />} />
                         <Route path="/page/:id" element={<PostList />} />
                         <Route path="/:slug" element={<PostDetail />} />
+                        <Route component={NotFound} />
                       </Routes>
                     </div>
                   </div>

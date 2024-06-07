@@ -6,3 +6,6 @@ npm install gh-pages --save-dev
 "deploy":"gh-pages -d build"
 
 npm run deploy
+
+## Giới thiệu
+Được viết bằng Nextjs
